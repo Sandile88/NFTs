@@ -47,4 +47,12 @@ describe ("SimpleERC721A", function () {
         }
         
     });
-})
+    
+
+    it("Should have a valid contract address", async function () {
+        const contractAddress = await simpleERC721A.getAddress();
+        expect(contractAddress).to.be.a('string');
+        expect(contractAddress).to.match(/^0x[0-9a-fA-F]{40}$/);
+        
+    });
+});
