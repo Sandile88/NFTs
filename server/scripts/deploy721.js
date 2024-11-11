@@ -3,8 +3,8 @@ const hre = require("hardhat");
 async function main() {
     const SimpleERC721A = await hre.ethers.getContractFactory("SimpleERC721A");
     const nft = await SimpleERC721A.deploy(
-        "Picture",
-        "pic",
+        "Random",
+        "ran",
         "QmXzwvrKWut84q6fVbebHQdJddM6DHrCAAbfJa84TAonVU/",
         2
     );

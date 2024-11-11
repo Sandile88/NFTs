@@ -12,8 +12,8 @@ describe ("SimpleERC721A", function () {
             console.log("hereeee");
 
             simpleERC721A = await SimpleERC721A.deploy(
-                "Picture",
-                "pic",
+                "Random",
+                "ran",
                 "QmXzwvrKWut84q6fVbebHQdJddM6DHrCAAbfJa84TAonVU/",
                 2
             );
@@ -31,7 +31,7 @@ describe ("SimpleERC721A", function () {
 
     it("Should mint an NFT", async function () {
         try {
-            await simpleERC721A.mint(2);
+            await simpleERC721A.mintToken(2);
 
             const totalSupply = await simpleERC721A.totalSupply();
             expect(totalSupply).to.equal(2);
