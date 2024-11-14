@@ -4,6 +4,9 @@ const { ethers } = require ("hardhat");
 describe ("SimpleERC721A", function () {
     let simpleERC721A, owner;
 
+    const baseURI = "ipfs://QmeUE2jirQnX4FiDzZMEZd1QPDe2ZY9SiRo9ekq3kWvcA1/";
+
+
     beforeEach(async () => {
         try {
             [owner] = await ethers.getSigners();
@@ -12,10 +15,10 @@ describe ("SimpleERC721A", function () {
             console.log("hereeee");
 
             simpleERC721A = await SimpleERC721A.deploy(
-                "Random",
-                "ran",
-                "QmXzwvrKWut84q6fVbebHQdJddM6DHrCAAbfJa84TAonVU/",
-                2
+                "Anime0",
+                "A0",
+                "QmeUE2jirQnX4FiDzZMEZd1QPDe2ZY9SiRo9ekq3kWvcA1/",
+                6
             );
 
             await simpleERC721A.waitForDeployment();
@@ -39,7 +42,7 @@ describe ("SimpleERC721A", function () {
             const tokenId = 1;
             const tokenURI = await simpleERC721A.tokenURI(tokenId);
             console.log("tokkkken: ". tokenURI);
-            expect(tokenURI).to.equal("QmXzwvrKWut84q6fVbebHQdJddM6DHrCAAbfJa84TAonVU/1.png");
+            expect(await simpleERC721A.tokenURI(0)).to.equal(`${baseURI}0.json`);
             
         } catch (error) {
             console.error("Minting failed: ", error);
