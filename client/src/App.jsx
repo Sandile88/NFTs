@@ -7,6 +7,7 @@ function App() {
   const [walletAddress, setWalletAddress] = useState("");
   const [contract, setContract] = useState(null);
   const [balance, setBalance] = useState(0);
+  const [nftImages, setNftImages] = useState([]);
   const [mintingInProgress, setMintingInProgress] = useState(false);
 
   useEffect(() => {
@@ -19,21 +20,29 @@ function App() {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      
+
       const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
       const nftContract = new ethers.Contract(
         contractAddress,
         token.abi,
         signer
-      );      
+      );
       setContract(nftContract);
-      
+
       const nftBalance = await nftContract.balanceOf(walletAddress);
       setBalance(Number(nftBalance));
+
+      const userNfts = await Promise.all(
+        Array.from({ length: nftBalance }, (_, i) =>
+          nftContract.tokenURI(i)
+        )
+      );
+      setNftImages(userNfts);
     } catch (error) {
       console.error("Failed to initialize contract:", error);
     }
   }
+
 
   async function connectWallet() {
     if (!connected) {
@@ -106,6 +115,11 @@ function App() {
         <div className="space-y-4">
           <p>Connected Address: {walletAddress}</p>
           <p>NFT Balance: {balance}</p>
+          {nftImages.map((imageUri, index) => (
+            <div key={index}>
+              <img src={imageUri} alt={`NFT ${index}`} className="max-w-full h-auto" />
+            </div>
+          ))}
           <button
             onClick={mintToken}
             disabled={mintingInProgress}
