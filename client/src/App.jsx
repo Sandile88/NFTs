@@ -30,10 +30,10 @@ function App() {
       setContract(nftContract);
 
       const nftBalance = await nftContract.balanceOf(walletAddress);
-      setBalance(Number(nftBalance));
+      setBalance(parseInt(nftBalance.toString()));
 
       const userNfts = await Promise.all(
-        Array.from({ length: nftBalance }, (_, i) =>
+        Array.from({ length: parseInt(nftBalance.toString()) }, (_, i) =>
           nftContract.tokenURI(i)
         )
       );
