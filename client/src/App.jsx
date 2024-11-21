@@ -10,6 +10,11 @@ function App() {
   const [nftImages, setNftImages] = useState([]);
   const [mintingInProgress, setMintingInProgress] = useState(false);
 
+
+  const baseUrl = "https://aquamarine-patient-mite-640.mypinata.cloud/ipfs/QmeUE2jirQnX4FiDzZMEZd1QPDe2ZY9SiRo9ekq3kWvcA1/";
+  const totalImgs = 6;
+
+
   useEffect(() => {
     if (connected && walletAddress) {
       initializeContract();
@@ -32,12 +37,8 @@ function App() {
       const nftBalance = await nftContract.balanceOf(walletAddress);
       setBalance(parseInt(nftBalance.toString()));
 
-      const userNfts = await Promise.all(
-        Array.from({ length: parseInt(nftBalance.toString()) }, (_, i) =>
-          nftContract.tokenURI(i)
-        )
-      );
-      setNftImages(userNfts);
+      const imageUrls = Array.from({ length: totalImgs }, (_, i)  => `${baseUrl}${i}.jpg`);
+      setNftImages(imageUrls);
     } catch (error) {
       console.error("Failed to initialize contract:", error);
     }
