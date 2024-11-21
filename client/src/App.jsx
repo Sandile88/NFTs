@@ -12,7 +12,7 @@ function App() {
 
 
   const baseUrl = "https://aquamarine-patient-mite-640.mypinata.cloud/ipfs/QmeUE2jirQnX4FiDzZMEZd1QPDe2ZY9SiRo9ekq3kWvcA1/";
-  const totalImgs = 6;
+  const totalImgs = 1;
 
 
   useEffect(() => {
@@ -109,6 +109,8 @@ function App() {
     }
   };
 
+  
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">NFT App</h1>
@@ -117,10 +119,21 @@ function App() {
           <p>Connected Address: {walletAddress}</p>
           <p>NFT Balance: {balance}</p>
           {nftImages.map((imageUri, index) => (
-            <div key={index}>
-              <img src={imageUri} alt={`NFT ${index}`} className="max-w-full h-auto" />
-            </div>
-          ))}
+  <div key={index} style={{ 
+      margin: '10px', 
+      position: 'relative', 
+      width: '300px', 
+      height: '220px', 
+      overflow: 'hidden' 
+    }} className="flex items-center justify-center rounded-lg shadow-md">
+    
+    <img src={imageUri} alt={`NFT ${index}`} 
+      className="object-cover w-full h-full" 
+      style={{ width: '100%', height: '100%' }}
+    />
+  </div>
+))}
+
           <button
             onClick={mintToken}
             disabled={mintingInProgress}
