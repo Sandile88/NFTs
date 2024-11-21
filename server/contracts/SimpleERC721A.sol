@@ -8,7 +8,8 @@ import "hardhat/console.sol";
 contract SimpleERC721A is ERC721A {
     string public baseURI;
     uint256 public maxSupply;
-    uint256 public tokenCounter;
+    // uint256 public tokenCounter;
+    mapping(address => uint256[]) private _ownedTokens;
 
     constructor(
         string memory _name,
@@ -23,7 +24,17 @@ contract SimpleERC721A is ERC721A {
     function mint(uint256 quantity) external {
         require(totalSupply() + quantity <= maxSupply, "Exceeds max supply");
         _safeMint(msg.sender, quantity);
+
+
+        for (uint256 i = 0; i < quantity; i++) {
+            _ownedTokens[msg.sender].push(totalSupply() + i);
+        }
         
+    }
+
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
+        require(index < _ownedTokens[owner].length, "Index out of bounds");
+        return _ownedTokens[owner][index];
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
@@ -31,7 +42,7 @@ contract SimpleERC721A is ERC721A {
         return string(abi.encodePacked(baseURI, _toString(tokenId), ".png"));
     }
 
-    function getNfts(uint256 counter) public returns(uint256) {
-        return tokenCounter = counter;
-    }
+    // function getNfts(uint256 counter) public returns(uint256) {
+    //     return tokenCounter = counter;
+    // }
 }

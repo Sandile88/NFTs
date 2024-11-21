@@ -9,10 +9,13 @@ function App() {
   const [balance, setBalance] = useState(0);
   const [nftImages, setNftImages] = useState([]);
   const [mintingInProgress, setMintingInProgress] = useState(false);
+  const [tokenIds, setTokenIds] = useState([]);
+
+  
 
 
   const baseUrl = "https://aquamarine-patient-mite-640.mypinata.cloud/ipfs/QmeUE2jirQnX4FiDzZMEZd1QPDe2ZY9SiRo9ekq3kWvcA1/";
-  const totalImgs = 1;
+  // const totalImgs = 1;
 
 
   useEffect(() => {
@@ -37,8 +40,23 @@ function App() {
       const nftBalance = await nftContract.balanceOf(walletAddress);
       setBalance(parseInt(nftBalance.toString()));
 
-      const imageUrls = Array.from({ length: totalImgs }, (_, i)  => `${baseUrl}${i}.jpg`);
-      setNftImages(imageUrls);
+
+       // Fetching the token IDs for owned NFTs
+       const ownedTokenIds = [];
+       for (let i = 0; i < nftBalance; i++) {
+           const tokenId = await nftContract.tokenOfOwnerByIndex(walletAddress, i);
+           ownedTokenIds.push(tokenId.toString());
+       }
+       setTokenIds(ownedTokenIds);
+
+
+        const imageUrls = ownedTokenIds.map((id) => `${baseUrl}${id}.jpg`);
+        setNftImages(imageUrls);
+
+
+
+      // const imageUrls = Array.from({ length: totalImgs }, (_, i)  => `${baseUrl}${i}.jpg`);
+      // setNftImages(imageUrls);
     } catch (error) {
       console.error("Failed to initialize contract:", error);
     }
@@ -72,6 +90,8 @@ function App() {
       setWalletAddress("");
       setContract(null);
       setBalance(0);
+      setTokenIds([]);
+      setNftImages([]);
     }
   }
 
@@ -81,6 +101,8 @@ function App() {
       setWalletAddress("");
       setContract(null);
       setBalance(0);
+      setTokenIds([]);
+      setNftImages([]);
     } else {
       setWalletAddress(accounts[0]);
     }
@@ -100,6 +122,17 @@ function App() {
       const newBalance = await contract.balanceOf(walletAddress);
       setBalance(Number(newBalance));
       
+        const ownedTokenIds = [];
+        for (let i = 0; i < newBalance; i++) {
+            const tokenId = await contract.tokenOfOwnerByIndex(walletAddress, i);
+            ownedTokenIds.push(tokenId.toString());
+        }
+        setTokenIds(ownedTokenIds);
+
+        const imageUrls = ownedTokenIds.map((id) => `${baseUrl}${id}.jpg`);
+        setNftImages(imageUrls);
+
+        
       console.log("NFT minted successfully");
     } catch (error) {
       console.error("Minting failed:", error);
